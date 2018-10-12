@@ -63,16 +63,18 @@ def precipitation():
                 filter(Measurement.date >= year_ago).\
                 group_by(Measurement.date).\
                 order_by(Measurement.date).all()
+    prcp_last_year = list(np.ravel(prcp_year_ago))
 
-    return jsonify(prcp_year_ago)
+    return jsonify(prcp_last_year)
 
 @app.route("/api/v1.0/stations")
 def stations():
     """Return a JSON list of stations from the dataset"""
     # Query all stations from the Station table
     stations = session.query(Station.station, Station.name).all()
+    station_list = list(np.ravel(stations))
 
-    return jsonify(stations)
+    return jsonify(station_list)
 
 @app.route("/api/v1.0/tobs")
 def tobs():
@@ -81,20 +83,20 @@ def tobs():
                 filter(Measurement.date >= year_ago).\
                 group_by(Measurement.date).\
                 order_by(Measurement.date).all()
+    tobs_list = list(np.ravel(tobs_year_ago))
+    return jsonify(tobs_list)
 
-    return jsonify(tobs_year_ago)
-
-@app.route("/api/v1.0/start_temp/<start>")
+@app.route("/api/v1.0/<start>")
 def start_temp(start):
     """Return a JSON list of the minimum temperature, the average temperature, and the max temperature for a given start"""
     min_avg_max = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
         filter(Measurement.date>=start).\
         group_by(Measurement.date).\
         order_by(Measurement.date).all()
+    temp_start = list(np.ravel(min_avg_max))
+    return jsonify(temp_start)
 
-    return jsonify(min_avg_max)
-
-@app.route("/api/v1.0/temp_range/<start>/<end>")
+@app.route("/api/v1.0/<start>/<end>")
 def temp_range(start, end):
     """Return a JSON list of the minimum temperature, the average temperature, and the max temperature for a given start-end range"""
     min_avg_max_range = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
@@ -102,6 +104,7 @@ def temp_range(start, end):
         filter(Measurement.date<=end).\
         group_by(Measurement.date).\
         order_by(Measurement.date).all()
+
     return jsonify(min_avg_max_range)
 
 
