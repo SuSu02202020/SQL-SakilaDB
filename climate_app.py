@@ -104,8 +104,8 @@ def temp_range(start, end):
         filter(Measurement.date<=end).\
         group_by(Measurement.date).\
         order_by(Measurement.date).all()
-
-    return jsonify(min_avg_max_range)
+    range_temp = list(np.ravel(min_avg_max))
+    return jsonify(range_temp)
 
 
 if __name__ == '__main__':
