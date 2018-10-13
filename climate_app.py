@@ -89,6 +89,8 @@ def tobs():
 @app.route("/api/v1.0/<start>")
 def start_temp(start):
     """Return a JSON list of the minimum temperature, the average temperature, and the max temperature for a given start"""
+    start = dt.striptime(start, '%Y-%m-$d')
+    end = dt.date(2017, 8, 23)
     min_avg_max = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
         filter(Measurement.date>=start).\
         group_by(Measurement.date).\
@@ -99,12 +101,15 @@ def start_temp(start):
 @app.route("/api/v1.0/<start>/<end>")
 def temp_range(start, end):
     """Return a JSON list of the minimum temperature, the average temperature, and the max temperature for a given start-end range"""
+    start = dt.striptime(start, '%Y-%m-$d')
+    end =  dt.striptime(end, '%Y-%m-$d')
+
     min_avg_max_range = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
         filter(Measurement.date>=start).\
         filter(Measurement.date<=end).\
         group_by(Measurement.date).\
         order_by(Measurement.date).all()
-    range_temp = list(np.ravel(min_avg_max))
+    range_temp = list(np.ravel(min_avg_max_range))
     return jsonify(range_temp)
 
 
