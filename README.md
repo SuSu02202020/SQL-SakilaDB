@@ -104,4 +104,4 @@
 
   * Create a GitHub repository.
   * Upload your .sql file with the completed queries.
-  * Submit a link to your GitHub repo through BootCampSpot.
+  * Submit a link to your GitHub repo through BootCampSpot
